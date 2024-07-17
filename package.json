@@ -1,0 +1,14 @@
+{
+    "name": "ip-address-visitor",
+    "version": "1.0.0",
+    "description": "A simple project to display the visitor's IP address using Node.js, Express, HTML, CSS, and JavaScript.",
+    "main": "server.js",
+    "scripts": {
+        "start": "node server.js"
+    },
+    "author": "Tu Nombre",
+    "license": "MIT",
+    "dependencies": {
+        "express": "^4.18.2"
+    }
+}
