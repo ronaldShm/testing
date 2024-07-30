@@ -1,6 +1,10 @@
 const express = require('express');
+const axios = require('axios');
 const app = express();
 const path = require('path');
+
+// Tu token de ipinfo.io
+const ipinfoToken = '9ce37cc397c93e';
 
 // Middleware para configurar CSP
 app.use((req, res, next) => {
@@ -10,10 +14,18 @@ app.use((req, res, next) => {
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/api/ip', (req, res) => {
-    const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+app.get('/api/ip', async (req, res) => {
+    const ip = req.headers['x-forwarded-for'] || req.remoteAddress;
     console.log('Visitor IP:', ip); // Para depuración
-    res.json({ ip });
+
+    try {
+        const response = await axios.get(`https://ipinfo.io/${ip}/geo?token=${ipinfoToken}`);
+        const { country, city } = response.data;
+        res.json({ ip, country, city });
+    } catch (error) {
+        console.error('Error fetching geolocation data:', error);
+        res.status(500).json({ error: 'Error fetching geolocation data' });
+    }
 });
 
 app.get('/', (req, res) => {
